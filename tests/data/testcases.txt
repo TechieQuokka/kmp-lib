@@ -1,0 +1,174 @@
+# KMP String Matching Library Test Cases
+# Format: TEXT|PATTERN|EXPECTED_POSITIONS (comma-separated) or NOT_FOUND
+# Lines starting with # are comments
+
+# =============================================================================
+# SECTION 1: Basic Matching Tests
+# =============================================================================
+
+# Simple exact match
+hello world|world|6
+The quick brown fox jumps over the lazy dog|fox|16
+Programming in C++ is both challenging and rewarding|C++|15
+
+# Match at beginning
+The beginning of wisdom is the definition of terms|The|0
+ABCDEFGHIJKLMNOPQRSTUVWXYZ|ABC|0
+Start of the string matters for performance|Start|0
+
+# Match at end
+This is the final word|word|18
+Looking for the needle in this haystack needle|needle|16,40
+All roads lead to Rome|Rome|18
+
+# Match in middle
+The beautiful sunset painted the sky with brilliant colors|sky|33
+In the middle of difficulty lies opportunity|middle|7
+Between two evils I always pick the one I never tried before|evils|12
+
+# Multiple occurrences
+abracadabra|abra|0,7
+Mississippi|issi|1,4
+banana banana banana|banana|0,7,14
+the the the the|the|0,4,8,12
+aaaaaaaaa|aaa|0,1,2,3,4,5,6
+
+# No match found
+hello world|xyz|NOT_FOUND
+The quick brown fox|elephant|NOT_FOUND
+ABCDEFG|HIJKLMN|NOT_FOUND
+completely different strings here|notfound|NOT_FOUND
+
+# =============================================================================
+# SECTION 2: Overlapping Pattern Tests
+# =============================================================================
+
+# Classic overlapping cases
+aaaaaaaaaaaaaaaa|aa|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
+abababababab|abab|0,2,4,6,8
+aaabaaaabaaaabaaa|aab|1,6,11
+abcabcabcabc|abcabc|0,3,6
+xyxyxyxyxyxy|xyxy|0,2,4,6,8
+
+# Pattern with self-overlap
+ABCABDABCABC|ABCABC|6
+abaababaabaab|abaab|0,5,8
+xyzxyzxyzxyz|xyzxyz|0,3,6
+
+# =============================================================================
+# SECTION 3: Special Characters Tests
+# =============================================================================
+
+# Whitespace patterns
+hello   world|   |5
+line1	column2	line2|	|5,13
+
+# Punctuation
+Hello, World! How are you?|, |5
+C++ is great; Java is too.|; |12
+Question? Answer! Statement.|?|8
+
+# Mixed special characters
+path/to/file.txt|/to/|4
+email@domain.com|@|5
+price: $99.99|$|7
+100% complete!|%|3
+
+# =============================================================================
+# SECTION 4: Case Sensitivity Tests
+# =============================================================================
+
+# Case sensitive - should not match
+Hello World|hello|NOT_FOUND
+UPPERCASE|uppercase|NOT_FOUND
+MixedCase|mixedcase|NOT_FOUND
+
+# Case sensitive - exact match required
+HelloHelloHello|Hello|0,5,10
+ABCabcABCabc|ABC|0,6
+TestTESTtest|TEST|4
+
+# =============================================================================
+# SECTION 5: Numeric Pattern Tests
+# =============================================================================
+
+# Pure numeric patterns
+1234567890|456|3
+9999999999|999|0,1,2,3,4,5,6,7
+2024-12-19|12|5
+123.456.789|456|4
+
+# Mixed alphanumeric
+version2.0.1|2.0|7
+user123admin|123|4
+data2024backup|2024|4
+file001file002file003|file|0,7,14
+
+# =============================================================================
+# SECTION 6: Edge Cases
+# =============================================================================
+
+# Single character patterns
+aaaaaaa|a|0,1,2,3,4,5,6
+abcdefg|d|3
+xyzxyzxyz|z|2,5,8
+
+# Single character text
+a|a|0
+x|y|NOT_FOUND
+
+# Pattern equals text
+exactly|exactly|0
+match|match|0
+
+# Pattern longer than text - no match possible
+hi|hello|NOT_FOUND
+ab|abcd|NOT_FOUND
+
+# Almost matching patterns
+abcdef|abcdfg|NOT_FOUND
+hello world|hello_world|NOT_FOUND
+close match|close_match|NOT_FOUND
+
+# =============================================================================
+# SECTION 7: Real-World Scenarios
+# =============================================================================
+
+# Log file patterns
+[ERROR] Connection failed [ERROR] Retry attempt|[ERROR]|0,26
+
+# Code patterns
+function getData() { } function setData() { }|function|0,23
+
+# HTML-like patterns
+<div><div>Hello</div></div>|<div|0,5
+
+# =============================================================================
+# SECTION 8: Stress Test Patterns
+# =============================================================================
+
+# Repeated pattern (50 a's with needle at end)
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaneedle|needle|50
+
+# Long pattern
+The quick brown fox|quick brown|4
+
+# =============================================================================
+# SECTION 9: Programming Related Tests
+# =============================================================================
+
+# Variable names
+getUserDataFromDatabaseConnection|Data|7,15
+calculateTotalPriceWithDiscount|Price|14
+processInputValidationResult|Validation|12
+
+# =============================================================================
+# SECTION 10: Natural Language Tests
+# =============================================================================
+
+# Common word repetitions
+the cat and the dog and the bird|the|0,12,24
+hello hello hello|hello|0,6,12
+
+# Sentence pattern
+This is a test. This is a test.|This is a test|0,16

@@ -1,0 +1,183 @@
+# KMP Regex Pattern Test Cases
+# Format: TEXT|REGEX_PATTERN|SHOULD_MATCH (true/false) or MATCH_POSITION
+
+# =============================================================================
+# SECTION 1: Basic Character Classes
+# =============================================================================
+
+# Digit matching
+The year is 2024 and counting|[0-9]+|12
+Order number: 12345|[0-9]+|15
+No digits here|[0-9]+|false
+Phone: 555-123-4567|[0-9]+|7
+
+# Word character matching
+Hello_World_123|[a-zA-Z_]+|0
+Variables: user_name, item_count|[a-z_]+|11
+UPPERCASE_ONLY|[A-Z_]+|0
+
+# Whitespace matching
+Multiple   spaces   here|\s+|8
+Tab	and spaces|\s+|3
+NoWhitespaceHere|\s+|false
+
+# =============================================================================
+# SECTION 2: Quantifiers
+# =============================================================================
+
+# Star quantifier (zero or more)
+aaaaabbbbb|a*b+|0
+bbbbbb|a*b+|0
+empty matches too|a*|0
+
+# Plus quantifier (one or more)
+aaaaaaa|a+|0
+single a|a+|7
+no match here|x+|false
+
+# Question mark (zero or one)
+color or colour|colou?r|0
+color|colou?r|0
+colouur|colou?r|false
+
+# =============================================================================
+# SECTION 3: Character Ranges
+# =============================================================================
+
+# Lowercase letters
+hello world|[a-z]+|0
+HELLO|[a-z]+|false
+MixedCase|[a-z]+|5
+
+# Uppercase letters
+HELLO WORLD|[A-Z]+|0
+hello|[A-Z]+|false
+camelCase|[A-Z]+|5
+
+# Mixed ranges
+Test123|[a-zA-Z0-9]+|0
+Special@#$|[a-zA-Z0-9]+|0
+@#$%^&|[a-zA-Z0-9]+|false
+
+# =============================================================================
+# SECTION 4: Alternation
+# =============================================================================
+
+# Simple alternation
+cat or dog|cat|dog|0
+I have a dog|cat|dog|9
+no pets|cat|dog|false
+
+# Multiple alternatives
+red green blue|red|green|blue|0
+the color is blue|red|green|blue|13
+yellow|red|green|blue|false
+
+# Word boundaries with alternation
+error or warning|error|warning|0
+this is a warning|error|warning|10
+information|error|warning|false
+
+# =============================================================================
+# SECTION 5: Groups
+# =============================================================================
+
+# Simple grouping
+abcabc|(abc)+|0
+abcabcabc|(abc)+|0
+ab|(abc)+|false
+
+# Nested groups
+xyxyxy|(xy)+|0
+xyzxyz|(xyz)+|0
+xyxyzxy|(xy)+|0
+
+# Groups with alternation
+catdog|(cat|dog)+|0
+dogcatdog|(cat|dog)+|0
+bird|(cat|dog)+|false
+
+# =============================================================================
+# SECTION 6: Real-World Patterns
+# =============================================================================
+
+# Email-like pattern
+Contact: user@example.com|[a-z]+@[a-z]+\.[a-z]+|9
+Email: test@test.org works|[a-z]+@[a-z]+\.[a-z]+|7
+no email here|[a-z]+@[a-z]+\.[a-z]+|false
+
+# URL-like pattern
+Visit http://example.com|http://[a-z]+\.[a-z]+|6
+See https://test.org|https://[a-z]+\.[a-z]+|4
+
+# Phone number-like pattern
+Call 123-456-7890 today|[0-9]+-[0-9]+-[0-9]+|5
+Phone: 555-1234|[0-9]+-[0-9]+|7
+
+# IP address-like pattern
+Server at 192.168.1.1 running|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|10
+IP: 10.0.0.1|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|4
+
+# =============================================================================
+# SECTION 7: Escape Sequences
+# =============================================================================
+
+# Escaped dot
+file.txt|file\.txt|0
+filename.ext|name\.ext|4
+no dot match|file\.txt|false
+
+# Escaped special characters
+price: $100|$[0-9]+|7
+5*5=25|[0-9]+\*[0-9]+|0
+path/to/file|[a-z]+/[a-z]+|0
+
+# =============================================================================
+# SECTION 8: Complex Patterns
+# =============================================================================
+
+# Identifier pattern
+variable_name_123|[a-z][a-z_0-9]*|0
+_private|[a-z][a-z_0-9]*|false
+camelCase123|[a-z][a-z_0-9]*|0
+
+# Version number pattern
+Version 1.2.3 released|[0-9]+\.[0-9]+\.[0-9]+|8
+v2.0.0-beta|[0-9]+\.[0-9]+\.[0-9]+|1
+
+# Date-like pattern
+Date: 2024-12-19|[0-9]+-[0-9]+-[0-9]+|6
+Today is 12/19/2024|[0-9]+/[0-9]+/[0-9]+|9
+
+# =============================================================================
+# SECTION 9: Edge Cases
+# =============================================================================
+
+# Empty pattern behavior
+any text here||0
+
+# Single character patterns
+abcdef|a|0
+abcdef|f|5
+abcdef|z|false
+
+# Long patterns
+The quick brown fox jumps|quick brown|4
+Lorem ipsum dolor sit amet|ipsum dolor|6
+
+# =============================================================================
+# SECTION 10: Negated Character Classes
+# =============================================================================
+
+# Non-digit
+abc123def|[^0-9]+|0
+12345|[^0-9]+|false
+a1b2c3|[^0-9]+|0
+
+# Non-whitespace
+hello world|[^ ]+|0
+   spaces|[^ ]+|3
+
+# Non-alphanumeric
+hello@world|[^a-zA-Z0-9]+|5
+plain text|[^a-zA-Z]+|5

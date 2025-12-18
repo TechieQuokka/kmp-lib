@@ -1,0 +1,103 @@
+# KMP Long Sentence Test Cases
+# Format: TEXT|PATTERN|EXPECTED_POSITIONS
+# Focus on realistic long text scenarios
+
+# =============================================================================
+# SECTION 1: Scientific and Academic Text
+# =============================================================================
+
+The fundamental principles of quantum mechanics describe the behavior of matter and energy at the molecular, atomic, nuclear, and even smaller microscopic levels.|quantum|30
+The process of photosynthesis in plants involves the conversion of light energy into chemical energy.|photosynthesis|15
+In the field of artificial intelligence and machine learning, deep neural networks have revolutionized computer vision.|neural networks|67
+The human genome consists of approximately three billion base pairs of DNA.|genome|10
+Climate change represents one of the most significant challenges facing humanity.|Climate change|0
+
+# =============================================================================
+# SECTION 2: Technology and Computing
+# =============================================================================
+
+The development of blockchain technology has introduced a new paradigm for secure transactions.|blockchain|19
+Modern software development practices emphasize continuous integration and deployment pipelines.|continuous integration|48
+The architecture of microservices has transformed how large-scale applications are designed.|microservices|20
+Cloud computing platforms provide on-demand access to computing resources over the internet.|Cloud computing|0
+The emergence of quantum computing threatens to break many cryptographic algorithms.|quantum computing|17
+
+# =============================================================================
+# SECTION 3: Literature and Storytelling
+# =============================================================================
+
+In the ancient library of Alexandria, scholars studied manuscripts from across the known world.|library of Alexandria|15
+The detective carefully examined the crime scene, noting every detail.|detective|4
+As the sun set over the vast African savanna, the pride of lions began to stir.|African savanna|29
+The old lighthouse keeper had spent forty years maintaining the beacon.|lighthouse|8
+Through the dense canopy of the rainforest, sunlight barely penetrated.|rainforest|32
+
+# =============================================================================
+# SECTION 4: Historical and Cultural Context
+# =============================================================================
+
+The Renaissance period in European history marked a profound transformation in art and science.|Renaissance|4
+The Industrial Revolution fundamentally changed economic and social structures.|Industrial Revolution|4
+The ancient civilization of Mesopotamia developed between the Tigris and Euphrates rivers.|Mesopotamia|28
+The Silk Road connected the great civilizations of East and West for centuries.|Silk Road|4
+The French Revolution of 1789 transformed political thought throughout the world.|French Revolution|4
+
+# =============================================================================
+# SECTION 5: Business and Economics
+# =============================================================================
+
+The global financial crisis of 2008 exposed weaknesses in the banking system.|financial crisis|11
+Sustainable business practices have become increasingly important for companies.|Sustainable business|0
+The gig economy has transformed traditional employment relationships.|gig economy|4
+Supply chain management has become increasingly complex in the globalized economy.|Supply chain|0
+The cryptocurrency market has experienced extreme volatility since Bitcoin was introduced.|cryptocurrency|4
+
+# =============================================================================
+# SECTION 6: Health and Medicine
+# =============================================================================
+
+The development of vaccines represents one of the greatest achievements in medical history.|vaccines|19
+Mental health awareness has grown significantly in recent years.|Mental health|0
+The human microbiome plays a crucial role in digestion and immune function.|microbiome|10
+Precision medicine aims to tailor medical treatment to individual patients.|Precision medicine|0
+The opioid epidemic has caused devastating harm to communities across North America.|opioid epidemic|4
+
+# =============================================================================
+# SECTION 7: Environment and Nature
+# =============================================================================
+
+The Amazon rainforest contains an estimated ten percent of all species on the planet.|Amazon rainforest|4
+Ocean acidification is threatening marine ecosystems worldwide.|Ocean acidification|0
+Biodiversity loss has accelerated dramatically in recent decades.|Biodiversity|0
+Renewable energy sources are becoming increasingly cost-competitive with fossil fuels.|Renewable energy|0
+The Great Barrier Reef has experienced severe bleaching events due to rising temperatures.|Great Barrier Reef|4
+
+# =============================================================================
+# SECTION 8: Philosophy and Ethics
+# =============================================================================
+
+The trolley problem is a famous thought experiment in ethics.|trolley problem|4
+Existentialist philosophy emphasizes individual freedom and responsibility.|Existentialist|0
+The concept of artificial general intelligence raises profound ethical questions.|artificial general intelligence|15
+Utilitarianism judges actions by their consequences for overall happiness.|Utilitarianism|0
+The debate between free will and determinism has engaged philosophers for millennia.|free will|19
+
+# =============================================================================
+# SECTION 9: Space and Astronomy
+# =============================================================================
+
+The James Webb Space Telescope has provided unprecedented views of distant galaxies.|James Webb Space Telescope|4
+Black holes are regions where gravity is so strong that nothing can escape.|Black holes|0
+The search for extraterrestrial intelligence has expanded beyond radio signals.|extraterrestrial intelligence|15
+Mars exploration has intensified with multiple rovers studying the planet.|Mars exploration|0
+The Big Bang theory describes the origin of the universe.|Big Bang|4
+
+# =============================================================================
+# SECTION 10: Psychology and Human Behavior
+# =============================================================================
+
+Cognitive behavioral therapy has proven effective for treating mental health conditions.|Cognitive behavioral therapy|0
+The psychology of decision-making reveals that humans are subject to cognitive biases.|decision-making|18
+Emotional intelligence is crucial for leadership effectiveness and relationships.|Emotional intelligence|0
+The study of neuroplasticity has revolutionized our understanding of the brain.|neuroplasticity|13
+Attachment theory describes how early relationships shape our behavior throughout life.|Attachment theory|0

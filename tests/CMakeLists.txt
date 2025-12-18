@@ -4,6 +4,12 @@ add_executable(kmp_tests
     unit/test_pattern.cpp
     unit/test_regex.cpp
     unit/test_simd.cpp
+    unit/test_stress.cpp
+    unit/test_edge_cases.cpp
+    unit/test_randomized.cpp
+    unit/test_concurrency.cpp
+    unit/test_performance.cpp
+    unit/test_file_runner.cpp
 )
 
 target_link_libraries(kmp_tests PRIVATE

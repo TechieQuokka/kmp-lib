@@ -1,0 +1,100 @@
+# KMP Stress Test Patterns
+# These patterns are designed to test algorithm performance
+# Format: TEXT|PATTERN|EXPECTED_POSITIONS
+
+# =============================================================================
+# SECTION 1: Worst-Case Patterns for Naive Algorithms
+# =============================================================================
+
+# Long sequence of 'a's followed by 'b'
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab|aaaaab|94
+
+# Alternating pattern
+abababababababababababababababab|abab|0,2,4,6,8,10,12,14,16,18,20,22,24,26,28
+
+# =============================================================================
+# SECTION 2: Maximum Overlap Patterns
+# =============================================================================
+
+# Pattern where every prefix is also a suffix
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|aaaaaaaaaa|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90
+
+# =============================================================================
+# SECTION 3: Long Pattern Tests
+# =============================================================================
+
+# Pattern that appears twice
+The quick brown fox and the quick brown fox|quick brown|4,28
+
+# Nested repetitions
+xyzxyzxyzxyzxyzxyzxyz|xyzxyz|0,3,6,9,12,15
+
+# =============================================================================
+# SECTION 4: Dense Match Patterns
+# =============================================================================
+
+# Many overlapping occurrences
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|aa|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
+
+# Alternating dense matches
+abababababababababababababababababababababababababab|ab|0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50
+
+# Triple character dense
+abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc|abc|0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51
+
+# =============================================================================
+# SECTION 5: Boundary Condition Tests
+# =============================================================================
+
+# Pattern at exact start
+STARTMARKER followed by content|STARTMARKER|0
+
+# Pattern at exact end
+Content before ENDMARKER|ENDMARKER|15
+
+# Pattern exactly fills text
+ExactMatchTest|ExactMatchTest|0
+
+# =============================================================================
+# SECTION 6: Special Byte Sequences
+# =============================================================================
+
+# Repeated special characters
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!|!!!!!|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42
+
+# =============================================================================
+# SECTION 7: Real-World Log Patterns
+# =============================================================================
+
+# Error patterns in logs
+ERROR Connection failed ERROR Retry|ERROR|0,24
+
+# =============================================================================
+# SECTION 8: Code Pattern Tests
+# =============================================================================
+
+# Function definitions
+function one() { } function two() { }|function|0,19
+
+# Variable declarations
+const a = 1; const b = 2; const c = 3;|const|0,13,26
+
+# =============================================================================
+# SECTION 9: Natural Language Patterns
+# =============================================================================
+
+# Common word repetitions
+the cat the dog the bird|the|0,8,16
+
+# Sentence pattern
+Test one. Test two. Test three.|Test|0,10,20
+
+# =============================================================================
+# SECTION 10: Performance Critical Sequences
+# =============================================================================
+
+# Pattern with complex failure function
+abcabcabcabcabcabcabcabcabc|abcabcabc|0,3,6,9,12,15,18
+
+# Self-overlapping pattern
+abaababaaba|abaab|0,5
