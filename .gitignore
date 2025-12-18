@@ -1,0 +1,44 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.obj
+*.o
+*.a
+*.lib
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Package managers
+vcpkg_installed/
+conan/
+
+# Debug files
+*.pdb
+*.ilk
+
+# Test output
+Testing/
+CTestTestfile.cmake
+.claude/
