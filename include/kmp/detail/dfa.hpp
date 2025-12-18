@@ -132,6 +132,9 @@ private:
 // NFA State
 // =============================================================================
 
+// Sentinel value for "no transition" (using max value instead of 0)
+inline constexpr size_type no_transition = static_cast<size_type>(-1);
+
 struct nfa_state {
     enum class type {
         epsilon,      // epsilon transition
@@ -143,8 +146,11 @@ struct nfa_state {
     type kind = type::epsilon;
     char match_char = '\0';
     char_class match_class{};
-    size_type next1 = 0;  // primary transition
-    size_type next2 = 0;  // secondary (for epsilon splits)
+    size_type next1 = no_transition;  // primary transition
+    size_type next2 = no_transition;  // secondary (for epsilon splits)
+
+    [[nodiscard]] bool has_next1() const noexcept { return next1 != no_transition; }
+    [[nodiscard]] bool has_next2() const noexcept { return next2 != no_transition; }
 };
 
 // =============================================================================
@@ -260,6 +266,7 @@ public:
 private:
     std::vector<dfa_state> states_;
     std::vector<nfa_state> nfa_states_;
+    size_type nfa_start_ = 0;  // NFA start state
 
     void compile(std::string_view pattern) {
         // Step 1: Parse and build NFA using Thompson construction
@@ -276,9 +283,12 @@ private:
         size_type pos = 0;
         auto frag = parse_regex(pattern, pos);
 
+        // Store the NFA start state
+        nfa_start_ = frag.start;
+
         // Create accept state
         size_type accept = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::accept, '\0', {}, 0, 0});
+        nfa_states_.push_back({nfa_state::type::accept, '\0', {}, no_transition, no_transition});
 
         // Patch fragment end to accept
         patch(frag.end, accept);
@@ -296,13 +306,13 @@ private:
             ++pos;
             auto right = parse_concatenation(pattern, pos);
 
-            // Create split state
+            // Create split state: next1 goes to left, next2 goes to right
             size_type split = nfa_states_.size();
             nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, left.start, right.start});
 
             // Create join state (dummy for patching)
             size_type join = nfa_states_.size();
-            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, 0, 0});
+            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, no_transition, no_transition});
 
             patch(left.end, join);
             patch(right.end, join);
@@ -332,7 +342,7 @@ private:
         if (first) {
             // Empty pattern - create epsilon
             size_type state = nfa_states_.size();
-            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, 0, 0});
+            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, no_transition, no_transition});
             result = {state, state};
         }
 
@@ -386,7 +396,7 @@ private:
             ++pos;
             size_type state = nfa_states_.size();
             nfa_states_.push_back({nfa_state::type::class_match, '\0',
-                                   char_class::any_char(), 0, 0});
+                                   char_class::any_char(), no_transition, no_transition});
             return {state, state};
         }
 
@@ -399,14 +409,14 @@ private:
             // Anchors - simplified handling (match empty)
             ++pos;
             size_type state = nfa_states_.size();
-            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, 0, 0});
+            nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, no_transition, no_transition});
             return {state, state};
         }
 
         // Literal character
         ++pos;
         size_type state = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::char_match, c, {}, 0, 0});
+        nfa_states_.push_back({nfa_state::type::char_match, c, {}, no_transition, no_transition});
         return {state, state};
     }
 
@@ -447,7 +457,7 @@ private:
         }
 
         size_type state = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, 0, 0});
+        nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, no_transition, no_transition});
         return {state, state};
     }
 
@@ -462,37 +472,37 @@ private:
         switch (c) {
             case 'd':
                 nfa_states_.push_back({nfa_state::type::class_match, '\0',
-                                       char_class::digit(), 0, 0});
+                                       char_class::digit(), no_transition, no_transition});
                 break;
             case 'D': {
                 auto cc = char_class::digit();
                 cc.flip();
-                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, 0, 0});
+                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, no_transition, no_transition});
                 break;
             }
             case 'w':
                 nfa_states_.push_back({nfa_state::type::class_match, '\0',
-                                       char_class::word(), 0, 0});
+                                       char_class::word(), no_transition, no_transition});
                 break;
             case 'W': {
                 auto cc = char_class::word();
                 cc.flip();
-                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, 0, 0});
+                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, no_transition, no_transition});
                 break;
             }
             case 's':
                 nfa_states_.push_back({nfa_state::type::class_match, '\0',
-                                       char_class::space(), 0, 0});
+                                       char_class::space(), no_transition, no_transition});
                 break;
             case 'S': {
                 auto cc = char_class::space();
                 cc.flip();
-                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, 0, 0});
+                nfa_states_.push_back({nfa_state::type::class_match, '\0', cc, no_transition, no_transition});
                 break;
             }
             default:
                 // Literal escape (e.g., \., \*, etc.)
-                nfa_states_.push_back({nfa_state::type::char_match, c, {}, 0, 0});
+                nfa_states_.push_back({nfa_state::type::char_match, c, {}, no_transition, no_transition});
                 break;
         }
 
@@ -521,24 +531,34 @@ private:
     }
 
     nfa_fragment make_star(nfa_fragment inner) {
+        // a* = (a|epsilon)*
+        // Create split state: can go to inner or skip (next2 is the skip path)
         size_type split = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, 0});
+        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, no_transition});
+        // inner.end loops back to split
         patch(inner.end, split);
+        // The split state's next2 will be patched to whatever comes next
+        // For now, split IS both start and end (dangling next2)
         return {split, split};
     }
 
     nfa_fragment make_plus(nfa_fragment inner) {
+        // a+ = aa*
+        // Must match inner at least once, then optionally repeat
         size_type split = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, 0});
+        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, no_transition});
+        // inner.end goes to split
         patch(inner.end, split);
+        // split's next2 will be patched to whatever comes next
+        // Start is inner.start (must match once), end is split (dangling next2)
         return {inner.start, split};
     }
 
     nfa_fragment make_optional(nfa_fragment inner) {
         size_type split = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, 0});
+        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, inner.start, no_transition});
         size_type join = nfa_states_.size();
-        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, 0, 0});
+        nfa_states_.push_back({nfa_state::type::epsilon, '\0', {}, no_transition, no_transition});
         nfa_states_[split].next2 = join;
         patch(inner.end, join);
         return {split, join};
@@ -547,10 +567,20 @@ private:
     void patch(size_type state, size_type target) {
         if (state < nfa_states_.size()) {
             auto& s = nfa_states_[state];
-            if (s.next1 == 0 && s.kind == nfa_state::type::epsilon) {
-                s.next1 = target;
-            } else if (s.next1 == 0) {
-                s.next1 = target;
+            // For epsilon states (split nodes), patch next2 if next1 is already set
+            // For match states, patch next1
+            if (s.kind == nfa_state::type::epsilon) {
+                // Epsilon state: try next1 first, then next2
+                if (!s.has_next1()) {
+                    s.next1 = target;
+                } else if (!s.has_next2()) {
+                    s.next2 = target;
+                }
+            } else {
+                // Match state: only has next1
+                if (!s.has_next1()) {
+                    s.next1 = target;
+                }
             }
         }
     }
@@ -567,10 +597,10 @@ private:
 
             const auto& state = nfa_states_[s];
             if (state.kind == nfa_state::type::epsilon) {
-                if (state.next1 != 0 && states.insert(state.next1).second) {
+                if (state.has_next1() && states.insert(state.next1).second) {
                     stack.push_back(state.next1);
                 }
-                if (state.next2 != 0 && states.insert(state.next2).second) {
+                if (state.has_next2() && states.insert(state.next2).second) {
                     stack.push_back(state.next2);
                 }
             }
@@ -597,8 +627,8 @@ private:
             return key;
         };
 
-        // Start with epsilon closure of state 0
-        std::unordered_set<size_type> start_set{0};
+        // Start with epsilon closure of NFA start state
+        std::unordered_set<size_type> start_set{nfa_start_};
         epsilon_closure(start_set);
 
         std::vector<std::unordered_set<size_type>> worklist;
@@ -621,7 +651,8 @@ private:
                 throw std::runtime_error("DFA state limit exceeded - pattern too complex");
             }
 
-            const auto& current = worklist[processed];
+            // Copy to avoid reference invalidation when worklist grows
+            std::unordered_set<size_type> current = worklist[processed];
             size_type current_dfa = state_map[set_to_key(current)];
             ++processed;
 
@@ -641,7 +672,7 @@ private:
                         matches = state.match_class.test(static_cast<char>(c));
                     }
 
-                    if (matches && state.next1 != 0) {
+                    if (matches && state.has_next1()) {
                         next_set.insert(state.next1);
                     }
                 }
